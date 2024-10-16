@@ -21,3 +21,10 @@ export const Button = styled.button`
   border-radius: 5px;
   font-size: 1rem;
 `;
+export const Card = styled.div`
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+`;
