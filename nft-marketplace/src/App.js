@@ -13,7 +13,7 @@ function App() {
     <Router>
       <div className="App">
         <Navbar />
-        <h1>Multi-Blockchain DApp</h1>
+        <h1>MEME-COIN</h1>
         <EthereumInteraction />
         <TezosInteraction />
         <Routes>

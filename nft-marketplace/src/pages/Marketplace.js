@@ -4,11 +4,11 @@ import { Container, Title } from '../styles';
 import NFTList from '../components/NFTList';
 
 const Marketplace = () => {
-  const contractAddress = "0xYourContractAddress"; // Replace with your contract address
+  const contractAddress = "0xYourContractAddress"; // contract address
 
   return (
     <Container>
-      <Title>Marketplace</Title>
+      <Title>Buy cool Shit!</Title>
       <NFTList contractAddress={contractAddress} />
     </Container>
   );

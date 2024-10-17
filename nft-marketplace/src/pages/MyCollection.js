@@ -5,7 +5,7 @@ import { Container, Title } from '../styles';
 const MyCollection = () => {
   return (
     <Container>
-      <Title>My NFT Collection</Title>
+      <Title>As dope as me </Title>
       <p>Your personal NFT collection will be displayed here.</p>
     </Container>
   );
