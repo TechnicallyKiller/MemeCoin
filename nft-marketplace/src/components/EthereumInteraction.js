@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connectWallet, getAccount, getBalance } from '../services/ethereumService';
 import { mintNFT, transferNFT, burnNFT } from './nftService'; // Import contract methods
+import { Button, Input, Card } from './UIComponents'; // Import your UI components
 
 const EthereumInteraction = () => {
   const [account, setAccount] = useState('');
@@ -66,57 +67,55 @@ const EthereumInteraction = () => {
   };
 
   return (
-    <div>
-      <h2>Ethereum Interaction</h2>
+    <div className="p-8">
+      <h2 className="text-2xl font-bold mb-4">Ethereum Interaction</h2>
       {account ? (
         <div>
           <p>Connected Account: {account}</p>
           <p>Balance: {balance} ETH</p>
 
           {/* Mint NFT */}
-          <h3>Mint NFT</h3>
-          <input
-            type="text"
-            placeholder="Recipient Address"
-            value={recipient}
-            onChange={(e) => setRecipient(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Token URI"
-            value={tokenURI}
-            onChange={(e) => setTokenURI(e.target.value)}
-          />
-          <button onClick={handleMintNFT}>Mint NFT</button>
+          <Card title="Mint NFT">
+            <Input
+              placeholder="Recipient Address"
+              value={recipient}
+              onChange={(e) => setRecipient(e.target.value)}
+            />
+            <Input
+              placeholder="Token URI"
+              value={tokenURI}
+              onChange={(e) => setTokenURI(e.target.value)}
+            />
+            <Button onClick={handleMintNFT}>Mint NFT</Button>
+          </Card>
 
           {/* Transfer NFT */}
-          <h3>Transfer NFT</h3>
-          <input
-            type="text"
-            placeholder="Recipient Address"
-            value={recipient}
-            onChange={(e) => setRecipient(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Token ID"
-            value={tokenId}
-            onChange={(e) => setTokenId(e.target.value)}
-          />
-          <button onClick={handleTransferNFT}>Transfer NFT</button>
+          <Card title="Transfer NFT">
+            <Input
+              placeholder="Recipient Address"
+              value={recipient}
+              onChange={(e) => setRecipient(e.target.value)}
+            />
+            <Input
+              placeholder="Token ID"
+              value={tokenId}
+              onChange={(e) => setTokenId(e.target.value)}
+            />
+            <Button onClick={handleTransferNFT}>Transfer NFT</Button>
+          </Card>
 
           {/* Burn NFT */}
-          <h3>Burn NFT</h3>
-          <input
-            type="text"
-            placeholder="Token ID"
-            value={tokenId}
-            onChange={(e) => setTokenId(e.target.value)}
-          />
-          <button onClick={handleBurnNFT}>Burn NFT</button>
+          <Card title="Burn NFT">
+            <Input
+              placeholder="Token ID"
+              value={tokenId}
+              onChange={(e) => setTokenId(e.target.value)}
+            />
+            <Button onClick={handleBurnNFT}>Burn NFT</Button>
+          </Card>
         </div>
       ) : (
-        <button onClick={handleConnectWallet}>Connect Ethereum Wallet</button>
+        <Button onClick={handleConnectWallet}>Connect Ethereum Wallet</Button>
       )}
     </div>
   );
