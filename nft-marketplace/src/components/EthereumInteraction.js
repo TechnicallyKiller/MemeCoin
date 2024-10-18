@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { connectWallet, getAccount, getBalance } from '../services/ethereumService';
-import { mintNFT, transferNFT, burnNFT } from './nftService'; // Import contract methods
-import { Button, Input, Card } from './UIComponents'; // Import your UI components
+import { connectWallet, getAccount, getBalance } from '../services/ethereumService'; // Ensure these are correct
+import { mintNFT, transferNFT, burnNFT } from './nftService'; // Ensure contract methods are working
+import { Button, Input, Card } from './UIComponents'; // UI components
 
 const EthereumInteraction = () => {
-  const [account, setAccount] = useState('');
-  const [balance, setBalance] = useState('');
+  const [account, setAccount] = useState('');  // Holds the account address
+  const [balance, setBalance] = useState('');  // Holds the ETH balance
   const [recipient, setRecipient] = useState('');
   const [tokenURI, setTokenURI] = useState('');
   const [tokenId, setTokenId] = useState('');
 
+  // Load account and balance data if MetaMask is detected
   useEffect(() => {
     const loadAccountData = async () => {
       try {
@@ -24,21 +25,24 @@ const EthereumInteraction = () => {
 
     if (window.ethereum) {
       loadAccountData();
+    } else {
+      console.log("MetaMask is not installed.");
     }
   }, []);
 
+  // Handle connect wallet button click
   const handleConnectWallet = async () => {
     try {
-      await connectWallet();
-      const acc = await getAccount();
-      const bal = await getBalance();
-      setAccount(acc);
-      setBalance(bal);
+      const acc = await connectWallet(); // Request account connection
+      const bal = await getBalance();    // Get the balance after connection
+      setAccount(acc);                   // Update the account state
+      setBalance(bal);                   // Update the balance state
     } catch (error) {
       console.error('Error connecting to wallet:', error);
     }
   };
 
+  // Handle minting NFTs
   const handleMintNFT = async () => {
     try {
       const tx = await mintNFT(recipient, tokenURI);
@@ -48,6 +52,7 @@ const EthereumInteraction = () => {
     }
   };
 
+  // Handle transferring NFTs
   const handleTransferNFT = async () => {
     try {
       const tx = await transferNFT(recipient, tokenId);
@@ -57,6 +62,7 @@ const EthereumInteraction = () => {
     }
   };
 
+  // Handle burning NFTs
   const handleBurnNFT = async () => {
     try {
       const tx = await burnNFT(tokenId);

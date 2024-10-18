@@ -1,39 +1,51 @@
-// src/components/ui/Tabs.js
-import React, { useState } from 'react';
+import React from 'react'
 
-export const Tabs = ({ children }) => {
-  const [activeTab, setActiveTab] = useState(children[0].props.value);
-
-  const handleClick = (value) => {
-    setActiveTab(value);
-  };
+const Tabs = ({ children, defaultValue }) => {
+  const [activeTab, setActiveTab] = React.useState(defaultValue)
 
   return (
-    <div>
-      <div className="flex border-b border-gray-200 mb-4">
-        {children.map((child) => (
-          <button
-            key={child.props.value}
-            onClick={() => handleClick(child.props.value)}
-            className={`px-4 py-2 -mb-px border-b-2 ${
-              activeTab === child.props.value ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-600'
-            }`}
-          >
-            {child.props.label}
-          </button>
-        ))}
-      </div>
-      {children.map((child) =>
-        child.props.value === activeTab ? <div key={child.props.value}>{child}</div> : null
-      )}
+    <div className="w-full">
+      {React.Children.map(children, (child) => {
+        if (child.type === TabsList) {
+          return React.cloneElement(child, { activeTab, setActiveTab })
+        }
+        if (child.type === TabsContent) {
+          return React.cloneElement(child, { activeTab })
+        }
+        return child
+      })}
     </div>
-  );
-};
+  )
+}
 
-export const TabContent = ({ children }) => (
-  <div className="p-4">{children}</div>
-);
+const TabsList = ({ children, activeTab, setActiveTab }) => {
+  return (
+    <div className="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
+      {React.Children.map(children, (child) => {
+        return React.cloneElement(child, { activeTab, setActiveTab })
+      })}
+    </div>
+  )
+}
 
-export const TabsContent = ({ value, children }) => (
-  <div>{children}</div>
-);
+const TabsTrigger = ({ children, value, activeTab, setActiveTab }) => {
+  return (
+    <button
+      className={`w-full rounded-lg px-3 py-2 text-sm font-medium ${
+        activeTab === value
+          ? 'bg-white text-blue-700 shadow'
+          : 'text-blue-100 hover:bg-white/[0.12] hover:text-white'
+      }`}
+      onClick={() => setActiveTab(value)}
+    >
+      {children}
+    </button>
+  )
+}
+
+const TabsContent = ({ children, value, activeTab }) => {
+  if (activeTab !== value) return null
+  return <div>{children}</div>
+}
+
+export { Tabs, TabsList, TabsTrigger, TabsContent }
