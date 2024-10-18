@@ -1,27 +1,19 @@
 // src/components/Navbar.js
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '../styles';
-import { connectWallet } from '../services/ethereumService';
 
-const Navbar = () => {
-  const handleConnectWallet = async () => {
-    try {
-      await connectWallet();
-      alert("Wallet connected");
-    } catch (err) {
-      console.error("Connection error:", err);
-    }
-  };
-
+function Navbar() {
   return (
     <nav>
-      <Link to="/">Home</Link>
-      <Link to="/marketplace">Marketplace</Link>
-      <Link to="/my-collection">My Collection</Link>
-      <Button onClick={handleConnectWallet}>Connect Wallet</Button>
+      <ul>
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/marketplace">Marketplace</Link></li>
+        <li><Link to="/my-collection">My Collection</Link></li>
+        <li><Link to="/ethereum">Ethereum Interaction</Link></li>
+        <li><Link to="/tezos">Tezos Interaction</Link></li>
+      </ul>
     </nav>
   );
-};
+}
 
 export default Navbar;

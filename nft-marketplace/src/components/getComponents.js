@@ -7,7 +7,7 @@ const GetBalance = () => {
 
   useEffect(() => {
     // Make the API call to the backend
-    axios.get('http://localhost:5000/api/balance')
+    axios.get('http://localhost:3000/api/balance')
       .then(response => {
         // Set the state with the balance data from the backend
         setBalance(response.data.amount);
