@@ -1,12 +1,16 @@
 import { ethers } from 'ethers';
-
 let provider;
 let signer;
+// Replace with actual address
 
+
+
+// Initialize provider using ethers.js v6
 // Initialize provider using ethers.js v6
 if (typeof window.ethereum !== 'undefined') {
   provider = new ethers.BrowserProvider(window.ethereum); // ethers.js v6
 }
+
 
 // Function to connect the wallet
 export async function connectWallet() {

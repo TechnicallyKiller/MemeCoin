@@ -1,83 +1,83 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import './styles/globals.css';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/ui/tabs"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./components/ui/card"
-import { Button } from "./components/ui/button"
-import { Input } from "./components/ui/input"
-import { Wallet, CreditCard, Send, Flame, Home, Folder, ShoppingBag } from 'lucide-react'
-
-// Assume these functions are imported from your existing services
-import { connectWallet, getAccount, getBalance } from './services/ethereumService'
-import { connectTezosWallet, getTezosAccount, getTezosBalance } from './services/tezosService'
-import {mintNFT, transferNFT, burnNFT} from "./components/nftService"
-// Import your existing pages
-import HomePage from './pages/home'
-import MarketplacePage from './pages/Marketplace'
-import MyCollectionPage from './pages/MyCollection'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './components/ui/card';
+import { Button } from './components/ui/button';
+import { Input } from './components/ui/input';
+import { Wallet, CreditCard, Send, Flame, Home, Folder, ShoppingBag } from 'lucide-react';
+import { connectWallet, getAccount, getBalance } from './services/ethereumService';
+import { connectTezosWallet, getTezosAccount, getTezosBalance } from './services/tezosService';
+import { mintMeme, transferMeme, burnMeme } from './components/nftService';
+import IPFSUpload from './components/IPFSUpload';
+import HomePage from './pages/home';
+import MarketplacePage from './pages/Marketplace';
+import MyCollectionPage from './pages/MyCollection';
 
 export default function AppLayout() {
-  const [activeTab, setActiveTab] = useState('home')
-  const [ethereumAccount, setEthereumAccount] = useState('')
-  const [ethereumBalance, setEthereumBalance] = useState('')
-  const [tezosAccount, setTezosAccount] = useState('')
-  const [tezosBalance, setTezosBalance] = useState('')
-  const [recipientAddress, setRecipientAddress] = useState('')
-  const [tokenId, setTokenId] = useState('')
-  const [tokenUri, setTokenUri] = useState('')
+  const [activeTab, setActiveTab] = useState('home');
+  const [ethereumAccount, setEthereumAccount] = useState('');
+  const [ethereumBalance, setEthereumBalance] = useState('');
+  const [tezosAccount, setTezosAccount] = useState('');
+  const [tezosBalance, setTezosBalance] = useState('');
+  const [recipientAddress, setRecipientAddress] = useState('');
+  const [tokenId, setTokenId] = useState('');
+  const [tokenUri, setTokenUri] = useState('');
 
   const handleConnectEthereum = async () => {
     try {
-      await connectWallet()
-      const account = await getAccount()
-      setEthereumAccount(account)
-      const balance = await getBalance(account)
-      setEthereumBalance(balance)
+      await connectWallet();
+      const account = await getAccount();
+      setEthereumAccount(account);
+      const balance = await getBalance(account);
+      setEthereumBalance(balance);
     } catch (error) {
-      console.error('Error connecting Ethereum wallet:', error)
+      console.error('Error connecting Ethereum wallet:', error);
     }
-  }
+  };
+  
+
 
   const handleConnectTezos = async () => {
     try {
-      await connectTezosWallet()
-      const account = await getTezosAccount()
-      setTezosAccount(account)
-      const balance = await getTezosBalance(account)
-      setTezosBalance(balance)
+      await connectTezosWallet();
+      const account = await getTezosAccount();
+      setTezosAccount(account);
+      const balance = await getTezosBalance(account);
+      setTezosBalance(balance);
     } catch (error) {
-      console.error('Error connecting Tezos wallet:', error)
+      console.error('Error connecting Tezos wallet:', error);
     }
-  }
+  };
 
-  const handleMintNFT = async () => {
+  const handleMintMeme = async () => {
     try {
-      await mintNFT(recipientAddress, tokenUri)
-      alert('NFT minted successfully!')
+      await mintMeme(recipientAddress, tokenUri);
+      alert('NFT minted successfully!');
     } catch (error) {
-      console.error('Error minting NFT:', error)
-      alert('Failed to mint NFT')
+      console.error('Error minting NFT:', error);
+      alert('Failed to mint NFT');
     }
-  }
+  };
 
-  const handleTransferNFT = async () => {
+  const handleTransferMeme = async () => {
     try {
-      await transferNFT(recipientAddress, tokenId)
-      alert('NFT transferred successfully!')
+      await transferMeme(recipientAddress,tokenId);
+      alert('NFT transferred successfully!');
     } catch (error) {
-      console.error('Error transferring NFT:', error)
-      alert('Failed to transfer NFT')
+      console.error('Error transferring NFT:', error);
+      alert('Failed to transfer NFT');
     }
-  }
+  };
 
-  const handleBurnNFT = async () => {
+  const handleBurnMeme = async () => {
     try {
-      await burnNFT(tokenId)
-      alert('NFT burned successfully!')
+      await burnMeme(tokenId);
+      alert('NFT burned successfully!');
     } catch (error) {
-      console.error('Error burning NFT:', error)
-      alert('Failed to burn NFT')
+      console.error('Error burning NFT:', error);
+      alert('Failed to burn NFT');
     }
-  }
+  };
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -116,6 +116,11 @@ export default function AppLayout() {
         {activeTab === 'home' && (
           <div>
             <HomePage />
+
+            {/* IPFS Upload & Retrieval */}
+            
+
+            {/* Ethereum and Tezos Tabs */}
             <Tabs defaultValue="ethereum" className="w-full mt-6">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="ethereum">Ethereum</TabsTrigger>
@@ -161,6 +166,7 @@ export default function AppLayout() {
               </TabsContent>
             </Tabs>
 
+            {/* NFT Operations */}
             <Card className="mt-6">
               <CardHeader>
                 <CardTitle>NFT Operations</CardTitle>
@@ -198,13 +204,13 @@ export default function AppLayout() {
                 </div>
               </CardContent>
               <CardFooter className="flex justify-between">
-                <Button onClick={handleMintNFT}>
+                <Button onClick={handleMintMeme}>
                   <CreditCard className="mr-2 h-4 w-4" /> Mint NFT
                 </Button>
-                <Button onClick={handleTransferNFT}>
+                <Button onClick={handleTransferMeme}>
                   <Send className="mr-2 h-4 w-4" /> Transfer NFT
                 </Button>
-                <Button onClick={handleBurnNFT} variant="destructive">
+                <Button onClick={handleBurnMeme} variant="destructive">
                   <Flame className="mr-2 h-4 w-4" /> Burn NFT
                 </Button>
               </CardFooter>
@@ -216,5 +222,5 @@ export default function AppLayout() {
         {activeTab === 'marketplace' && <MarketplacePage />}
       </div>
     </div>
-  )
+  );
 }

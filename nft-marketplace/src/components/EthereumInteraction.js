@@ -4,8 +4,8 @@ import { mintNFT, transferNFT, burnNFT } from './nftService'; // Ensure contract
 import { Button, Input, Card } from './UIComponents'; // UI components
 
 const EthereumInteraction = () => {
-  const [account, setAccount] = useState('');  // Holds the account address
-  const [balance, setBalance] = useState('');  // Holds the ETH balance
+  const [account, setAccount] = useState('');  
+  const [balance, setBalance] = useState('');  
   const [recipient, setRecipient] = useState('');
   const [tokenURI, setTokenURI] = useState('');
   const [tokenId, setTokenId] = useState('');
