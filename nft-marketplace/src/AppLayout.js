@@ -185,6 +185,8 @@ function AppLayout() {
                       {isWalletConnected ? 'Wallet Connected' : 'Connect Ethereum Wallet'}
                     </Button>
                   </CardFooter>
+                  +
+                  +
                 </Card>
               </TabsContent>
               <TabsContent value="tezos">
@@ -246,15 +248,31 @@ function AppLayout() {
                 </div>
               </CardContent>
               <CardFooter className="flex justify-between">
-                <Button onClick={handleMintMeme} disabled={!isWalletConnected} className="bg-green-500 hover:bg-green-600 text-white">
-                  <CreditCard className="mr-2 h-4 w-4" /> Mint NFT
+              <Button
+               onClick={handleMintMeme}
+              disabled={!isWalletConnected}
+               className="bg-green-500 hover:bg-green-600 text-primary-foreground dark:text-primary-foreground"
+              >
+               <CreditCard className="mr-2 h-4 w-4" />
+                 Mint NFT
                 </Button>
-                <Button onClick={handleTransferMeme} disabled={!isWalletConnected} className="bg-blue-500 hover:bg-blue-600 text-white">
-                  <Send className="mr-2 h-4 w-4" /> Transfer NFT
-                </Button>
-                <Button onClick={handleBurnMeme} disabled={!isWalletConnected} className="bg-red-500 hover:bg-red-600 text-white">
-                  <Flame className="mr-2 h-4 w-4" /> Burn NFT
-                </Button>
+                <Button
+              onClick={handleTransferMeme}
+              disabled={!isWalletConnected}
+              className="bg-blue-500 hover:bg-blue-600 text-primary-foreground dark:text-primary-foreground"
+            >
+              <Send className="mr-2 h-4 w-4" />
+              Transfer NFT
+            </Button>
+
+            <Button
+              onClick={handleBurnMeme}
+              disabled={!isWalletConnected}
+              className="bg-red-500 hover:bg-red-600 text-primary-foreground dark:text-primary-foreground"
+            >
+              <Flame className="mr-2 h-4 w-4" />
+              Burn NFT
+            </Button>
               </CardFooter>
             </Card>
           </div>
