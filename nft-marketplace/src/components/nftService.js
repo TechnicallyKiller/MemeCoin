@@ -2,8 +2,9 @@ import { ethers } from 'ethers';
 
 // Contract details
 const CONTRACT_ADDRESS = '0x903c9b908a9FCb1C799ED97FEa382811CFB77C6c';
+const ETHERLINK_RPC_URL = 'https://etherlink-testnet.rpc-url.com';  // Replace with the actual Etherlink RPC URL
 
-// ABI (fully fixed, no extra brackets)
+// ABI (unchanged, with mint, burn, transfer functions)
 const abi = [
   {
     "inputs": [
@@ -91,35 +92,90 @@ const abi = [
     ],
     "stateMutability": "view",
     "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "ownerOf",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokenURI",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   }
 ];
 
-// Initialize ethers with the user's MetaMask wallet
-export const initializeProvider = async () => {
-  if (typeof window.ethereum !== 'undefined') {
-    try {
+// Initialize ethers with the user's MetaMask wallet for Ethereum or custom provider for Etherlink
+export const initializeProvider = async (network = 'ethereum') => {
+  try {
+    let provider;
+    if (network === 'etherlink') {
+      provider = new ethers.JsonRpcProvider(ETHERLINK_RPC_URL); // Etherlink testnet provider
+    } else if (typeof window.ethereum !== 'undefined') {
       await window.ethereum.request({ method: 'eth_requestAccounts' });
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      return provider;
-    } catch (error) {
-      console.error('Error accessing Ethereum account:', error);
-      throw new Error('Could not access Ethereum account');
+      provider = new ethers.BrowserProvider(window.ethereum); // Ethereum mainnet via MetaMask
+    } else {
+      throw new Error('MetaMask is not installed for Ethereum mainnet');
     }
-  } else {
-    throw new Error('MetaMask is not installed');
+    
+    return provider;
+  } catch (error) {
+    console.error('Error initializing provider:', error);
+    throw error;
+  }
+};
+export const getConnectedAddress = async () => {
+  try {
+    if (typeof window.ethereum !== 'undefined') {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []); // Request account access
+      return accounts[0];  // Return the first connected account
+    } else {
+      console.error("MetaMask is not installed!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching connected address:", error);
+    return null;
   }
 };
 
-// Get contract instance
-export const getContract = async () => {
+// Get contract instance based on the network
+export const getContract = async (network = 'ethereum') => {
   try {
-    const provider = await initializeProvider();
+    const provider = await initializeProvider(network);
     const signer = await provider.getSigner();
     const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
 
     console.log("Contract instance:", contract);
-    console.log("Contract ABI functions:", contract.interface.functions);
-    
     return contract;
   } catch (error) {
     console.error("Error initializing contract:", error);
@@ -127,14 +183,14 @@ export const getContract = async () => {
 };
 
 // Mint an NFT
-export const mintMeme = async (tokenURI) => {
+export const mintMeme = async (tokenURI, network = 'ethereum') => {
   try {
-    const contract = await getContract();
+    const contract = await getContract(network);
     if (!contract) throw new Error("Contract is not initialized");
-    
+
     const tx = await contract.mintMeme(tokenURI);
     await tx.wait();
-    
+
     return tx;
   } catch (error) {
     console.error("Error minting NFT:", error);
@@ -143,12 +199,12 @@ export const mintMeme = async (tokenURI) => {
 };
 
 // Transfer an NFT
-export const transferMeme = async (recipient, tokenId) => {
+export const transferMeme = async (recipient, tokenId, network = 'ethereum') => {
   try {
-    const contract = await getContract();
+    const contract = await getContract(network);
     const tx = await contract.transferMeme(recipient, tokenId);
     await tx.wait();
-    
+
     return tx;
   } catch (error) {
     console.error("Error transferring NFT:", error);
@@ -157,15 +213,29 @@ export const transferMeme = async (recipient, tokenId) => {
 };
 
 // Burn an NFT
-export const burnMeme = async (tokenId) => {
+export const burnMeme = async (tokenId, network = 'ethereum') => {
   try {
-    const contract = await getContract();
+    const contract = await getContract(network);
     const tx = await contract.burnMeme(tokenId);
     await tx.wait();
-    
+
     return tx;
   } catch (error) {
     console.error("Error burning NFT:", error);
+    throw error;
+  }
+};
+
+// Fetch NFTs
+export const fetchNFTs = async (contractAddress, tokenId, network = 'ethereum') => {
+  try {
+    const contract = await getContract(network);
+    const tokenURI = await contract.tokenURI(tokenId);
+    const owner = await contract.ownerOf(tokenId);
+    
+    return { tokenURI, owner };
+  } catch (error) {
+    console.error("Error fetching NFT:", error);
     throw error;
   }
 };

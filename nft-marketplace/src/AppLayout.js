@@ -185,8 +185,6 @@ function AppLayout() {
                       {isWalletConnected ? 'Wallet Connected' : 'Connect Ethereum Wallet'}
                     </Button>
                   </CardFooter>
-                  +
-                  +
                 </Card>
               </TabsContent>
               <TabsContent value="tezos">
